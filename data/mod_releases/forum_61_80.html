@@ -1,0 +1,1672 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-gb" xml:lang="en-gb">
+<head>
+<script src="">
+</script>
+<!-- konami code script to enable cageing it up -->
+<script>
+/*
+ * Konami-JS ~
+ * :: Now with support for touch events and multiple instances for
+ * :: those situations that call for multiple easter eggs!
+ * Code: http://konami-js.googlecode.com/
+ * Examples: http://www.snaptortoise.com/konami-js
+ * Copyright (c) 2009 George Mandis (georgemandis.com, snaptortoise.com)
+ * Version: 1.4.2 (9/2/2013)
+ * Licensed under the MIT License (http://opensource.org/licenses/MIT)
+ * Tested in: Safari 4+, Google Chrome 4+, Firefox 3+, IE7+, Mobile Safari 2.2.1 and Dolphin Browser
+ */
+
+var Konami = function (callback) {
+	var konami = {
+		addEvent: function (obj, type, fn, ref_obj) {
+			if (obj.addEventListener)
+				obj.addEventListener(type, fn, false);
+			else if (obj.attachEvent) {
+				// IE
+				obj["e" + type + fn] = fn;
+				obj[type + fn] = function () {
+					obj["e" + type + fn](window.event, ref_obj);
+				}
+				obj.attachEvent("on" + type, obj[type + fn]);
+			}
+		},
+		input: "",
+		pattern: "38384040373937396665",
+		load: function (link) {
+			this.addEvent(document, "keydown", function (e, ref_obj) {
+				if (ref_obj) konami = ref_obj; // IE
+				konami.input += e ? e.keyCode : event.keyCode;
+				if (konami.input.length > konami.pattern.length)
+					konami.input = konami.input.substr((konami.input.length - konami.pattern.length));
+				if (konami.input == konami.pattern) {
+					konami.code(link);
+					konami.input = "";
+					e.preventDefault();
+					return false;
+				}
+			}, this);
+			this.iphone.load(link);
+		},
+		code: function (link) {
+			window.location = link
+		},
+		iphone: {
+			start_x: 0,
+			start_y: 0,
+			stop_x: 0,
+			stop_y: 0,
+			tap: false,
+			capture: false,
+			orig_keys: "",
+			keys: ["UP", "UP", "DOWN", "DOWN", "LEFT", "RIGHT", "LEFT", "RIGHT", "TAP", "TAP"],
+			code: function (link) {
+				konami.code(link);
+			},
+			load: function (link) {
+				this.orig_keys = this.keys;
+				konami.addEvent(document, "touchmove", function (e) {
+					if (e.touches.length == 1 && konami.iphone.capture == true) {
+						var touch = e.touches[0];
+						konami.iphone.stop_x = touch.pageX;
+						konami.iphone.stop_y = touch.pageY;
+						konami.iphone.tap = false;
+						konami.iphone.capture = false;
+						konami.iphone.check_direction();
+					}
+				});
+				konami.addEvent(document, "touchend", function (evt) {
+					if (konami.iphone.tap == true) konami.iphone.check_direction(link);
+				}, false);
+				konami.addEvent(document, "touchstart", function (evt) {
+					konami.iphone.start_x = evt.changedTouches[0].pageX;
+					konami.iphone.start_y = evt.changedTouches[0].pageY;
+					konami.iphone.tap = true;
+					konami.iphone.capture = true;
+				});
+			},
+			check_direction: function (link) {
+				x_magnitude = Math.abs(this.start_x - this.stop_x);
+				y_magnitude = Math.abs(this.start_y - this.stop_y);
+				x = ((this.start_x - this.stop_x) < 0) ? "RIGHT" : "LEFT";
+				y = ((this.start_y - this.stop_y) < 0) ? "DOWN" : "UP";
+				result = (x_magnitude > y_magnitude) ? x : y;
+				result = (this.tap == true) ? "TAP" : result;
+
+				if (result == this.keys[0]) this.keys = this.keys.slice(1, this.keys.length);
+				if (this.keys.length == 0) {
+					this.keys = this.orig_keys;
+					this.code(link);
+				}
+			}
+		}
+	}
+
+	typeof callback === "string" && konami.load(callback);
+	if (typeof callback === "function") {
+		konami.code = callback;
+		konami.load();
+	}
+
+	return konami;
+};
+</script>
+<script>
+var cage_egg = new Konami(function(){
+	var cages = [];
+	cages[0] = "http://famous-wallpapers.com/wp-content/uploads/2012/01/nicholas-cage-1440x900.jpg";
+	cages[1] = "http://www.hellomagazine.com/imagenes/news-in-pics/2011/05/06/nicholas-cage.jpg";
+	cages[2] = "http://cdn0.lostateminor.com/wp-content/uploads/2012/07/Nicholas-Cage-Cat-9.jpg";
+	cages[3] = "http://i.imgur.com/p69jW.jpg";
+	cages[4] = "http://www.kickasspics.net/images/nicholas3.jpg";
+	cages[5] = "http://cdn.rsvlts.com/wp-content/uploads/2012/09/Nick-Cage-baby-4.jpg";
+	cages[6] = "http://i91.photobucket.com/albums/k300/agentbedhead/Seven/cagecrazy33sm.jpg";
+	cages[7] = "http://i91.photobucket.com/albums/k300/agentbedhead/Seven/cagecrazy33sm.jpg";
+	cages[8] = "http://s3-ak.buzzfeed.com/static/campaign_images/webdr02/2013/2/8/11/nic-cage-grows-a-glorious-beard-1-14395-1360342618-1_big.jpg";
+	cages[9] = "http://i1.wp.com/cdn.smosh.com/sites/default/files/ftpuploads/bloguploads/nic-cage-everyone-1.jpg";
+	cages[10] = "http://4.bp.blogspot.com/-wEqgODDUFtE/TaeZJRtJGoI/AAAAAAAABpw/OA1jpowiO50/s1600/nicolas_cage_festival_de_venise_mostra.jpg";
+	cages[11] = "http://filmdrift.files.wordpress.com/2011/02/drive-angry-3d-nicholas-cage.jpg";
+	cages[12] = "http://www.bitrebels.com/wp-content/uploads/2012/06/Any-Photo-Into-Nicholas-Cage.jpg";
+	cages[13] = "http://shechive.files.wordpress.com/2012/08/nicholas-cage-9.jpg";
+	cages[14] = "http://th03.deviantart.net/fs71/PRE/i/2013/022/b/b/nicholas_cage_15___debra_morgan__dexter__by_internetsorcerer-d5sbqzw.jpg";
+	cages[15] = "http://i.huffpost.com/gen/821742/thumbs/o-NIC-CAGE-HEAD-SNAKE-facebook.jpg";
+	cages[16] = "http://www.comicbookmovie.com/images/uploads/Nicholas%20Cage%20as%20Ghost%20Rider.jpg";
+	cages[17] = "http://akirathedon.com/wp-content/uploads/2012/06/cage-cat.png";
+	cages[18] = "http://24.media.tumblr.com/092b9bf2e3a769f4e26f8ff1b8a0f084/tumblr_mkj4p94Bz41s6tqv6o1_1280.jpg";
+	cages[19] = "http://24.media.tumblr.com/fd5ba1dc1e215d4ca50b0043c3c7e45d/tumblr_mkicqcwXLB1s9aeiqo1_400.jpg";
+	cages[20] = "http://24.media.tumblr.com/2fca205f93b123bfe42146d4076d09fd/tumblr_mkhuknJB9g1s2dzgjo1_500.jpg";
+	cages[21] = "http://24.media.tumblr.com/2aa8a494ca8dda9dc018230adc7143c8/tumblr_mkhn2xhSJP1rn2b4vo1_500.jpg";
+	cages[22] = "http://25.media.tumblr.com/bc9caa74b6b9363c59d6a4f4badb5f8b/tumblr_mkhmgbqanO1rn3j86o1_500.png";
+	cages[23] = "http://25.media.tumblr.com/3705a1954896cfe1d23cc4ecd4847efe/tumblr_mkbynfblUn1qk2sb5o1_500.jpg";
+	cages[24] = "http://25.media.tumblr.com/3b3f4b3becfc4252b34ffe902d2026fe/tumblr_mkgveq13KW1rt16eyo1_500.png";
+	cages[25] = "http://25.media.tumblr.com/a6bc1216e3dd68612202d1326a2c822a/tumblr_mkgfyo6EQF1s9803to1_500.jpg";
+	cages[26] = "http://24.media.tumblr.com/e3dbf83379c004f35b81aec82d925c5b/tumblr_mkg95frnG11s9803to1_500.jpg";
+	cages[27] = "http://25.media.tumblr.com/0c34b1063f130329c1f39af2ddf0fbdc/tumblr_mkg90tYE3G1rwd6w7o1_500.jpg";
+	cages[28] = "http://25.media.tumblr.com/f55ff3d81d9d312866ef81efcb64f94f/tumblr_mkg168KmFJ1s2qp5jo1_500.jpg";
+	cages[29] = "http://24.media.tumblr.com/a696403d857744b91a8eeab6335ca915/tumblr_mke58f0DOD1qgy25so1_400.jpg";
+	cages[30] = "http://25.media.tumblr.com/8f62cc5ce67dc92286ff322358f8f725/tumblr_mkdz5tsDkX1r10rfao1_400.jpg";
+	cages[31] = "http://24.media.tumblr.com/d5bc3f706f3635ff2edefdf56e0a774c/tumblr_mkdmzn9Mej1qb7lmco1_500.jpg";
+	cages[32] = "http://25.media.tumblr.com/46f30a70f6812413c3499af4c336b180/tumblr_mkcg4jrkbe1rekoyro2_400.jpg";
+	cages[33] = "http://4.bp.blogspot.com/-59J8z8uIgCw/UP6y2_wc1wI/AAAAAAAAC9E/8BMNVkfIIHQ/s1600/JasonBaldariNick+Cage+as+Robert+E.+Lee.jpg";
+	cages[34] = "http://3.bp.blogspot.com/-x_LFV97PsW0/UPlxd__l8lI/AAAAAAAAC4U/dTXly0e4m4M/s1600/JOCHEN+FUCHS+nicolas_cage.jpg";
+	cages[35] = "http://www.thecelebrityzone.com/actors/nicolas_cage/en/nicolas_cage_image_1.jpg";
+	cages[36] = "http://ll-media.tmz.com/2012/09/21/0921-tmz-nicolas-cage-3.jpg";
+	cages[37] = "http://3.bp.blogspot.com/-uacZ1QQCaGQ/Ula49mbBgyI/AAAAAAAADF4/6Gep4IdcxFw/s1600/Olivier+Graham+Shark.jpg";
+	cages[38] = "http://mimg.ugo.com/200808/22143/nicolas-cage-spotlight.jpg";
+	cages[39] = "http://starsmedia.ign.com/stars/image/article/908/908074/nicolas-cage-20080905025038648-000.jpg";
+	cages[40] = "http://media.avclub.com/images/413/413292/16x9/627.jpg?1294";
+	cages[41] = "http://www.thenerdpocalypse.com/wp-content/uploads//2012/02/nicolas-cage-cigar.jpg";
+	cages[42] = "http://3.bp.blogspot.com/-6kBvV0jqRVM/UP_3-HpYWBI/AAAAAAAAC-s/IdJggS-dKn0/s640/NicCageasprincessLeilaFamRosetton.jpg";
+	cages[43] = "http://4.bp.blogspot.com/-Mam4KxcTPQM/UP1wj9IXE1I/AAAAAAAAC8k/_nhXml114fY/s640/Anthony+Gargasz-Bane.jpg";
+	cages[44] = "http://3.bp.blogspot.com/-oXnTc_vuYPI/UP1vZ2EWckI/AAAAAAAAC8A/VW4JfOzuoQc/s320/isaac+evans-NicCage+as+SteveJobs.jpg";
+	cages[45] = "http://4.bp.blogspot.com/-vEus9jaTGe4/UPhwzlVX5OI/AAAAAAAAC2o/zw4EiJHUZKI/s320/nic_cage_as_stephanie-eniko_ujj+2.jpg";
+	cages[46] = "http://4.bp.blogspot.com/-aV1nOHqcwoE/UPhvr7ZiFnI/AAAAAAAAC2Y/OWucmk7PONU/s320/lucian+capellaro+JohnWayne_Nic.jpg";
+	cages[47] = "http://1.bp.blogspot.com/-S83wPDE67to/UPgUdigQRKI/AAAAAAAAC2I/4o9RRrrwOHk/s320/MATT+BOMAN+Rasputin.jpg";
+	cages[48] = "http://3.bp.blogspot.com/-oorAW6zMixY/UPgR4ASVMxI/AAAAAAAAC1g/f6wxl7zne34/s320/J+WARDnick+as+moses.jpg";
+	cages[49] = "http://2.bp.blogspot.com/-hydJKprb-3s/TomwLOGev4I/AAAAAAAACwg/vfoxIRsoAJ0/s320/RICHARD+SOUTHERTON+Nic+Cage+Panda.jpg";
+	cages[50] = "http://4.bp.blogspot.com/-yzGP65Jj36o/ToYojDT6HHI/AAAAAAAACvw/qotUTPHJPeg/s1600/BRENT+O+nic+cage+as+Klaus+Nomi.jpg";
+	cages[51] = "http://1.bp.blogspot.com/-wQwbQ-rLyiU/ToYntEY5thI/AAAAAAAACvg/m45me5DXz3w/s1600/BENNY+silver_surfer_cage_of_galactus.jpg";
+
+
+	$("img").each(function(){
+		if(Math.random() > 0.1)
+		{
+		var img = jQuery(this),
+		 src = img.attr("src");
+		if (jQuery.inArray(src, cages) != -1){
+				return;
+		}
+		if (src.indexOf('styles/images/imageset') != -1){
+				return;
+		}
+		var height = img.height();
+		var width = img.width();
+		img.attr("src", cages[Math.floor(Math.random() * cages.length)]);
+		img.height(height);
+		img.width(width);
+		}
+	});
+});
+</script>
+<!-- CEASE CAGING IT UP --><!-- FONT ANNOYANCE SCRIPT -->
+<script>
+var color_egg = new Konami(function(){
+	var base = 48,
+	getFontSize = function() {
+		return Math.max(10, base * Math.random()) + 'px';
+	};
+	var colors = ['#FF406C', '#FFF536', '#85FF4D', '#57A8FF',
+	 '#C859FF', '#002b36', '#073642', '#586e75', '#657b83',
+	 '#839496', '#93a1a1', '#eee8d5', '#fdf6e3', '#b58900',
+	 '#cb4b16', '#dc322f', '#d33682', '#6c71c4', '#268bd2',
+	 '#2aa198', '#859900'];
+	var colors_i = 0;
+	var fontFamilies = ['Impact','"Comic Sans MS"',
+	'"Arial Black"','"Lucida Console"','Arial',
+	'Tahoma','Georgia'];
+
+
+	$( ".postbody, .postbody *" )
+	  .contents()
+	  .filter(function(){
+		return this.nodeType === 3;
+	  }).each(function(){
+		var words = $(this).text().split(' '); var arr = [];
+		for (var i = 0; i < words.length; i++) {
+			arr.push('<span style="font-size: ' + getFontSize() + ';color: '
+			+ colors[colors_i++ % colors.length] + ';font-family: '
+			+ fontFamilies[Math.floor(Math.random() * fontFamilies.length)]
+			+ ';">' + words[i] + '</span>');
+		}
+		 $(this).replaceWith(arr.join(' '));
+	});
+});
+</script>
+<!-- CEASE FONT ANNOYANCE SCRIPT -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta http-equiv="content-language" content="en-gb" />
+<meta http-equiv="content-style-type" content="text/css" />
+<meta http-equiv="imagetoolbar" content="no" />
+
+<title>Data Realms Fan Forums - View forum - Mod Releases</title>
+
+
+
+<link rel="stylesheet" href="..//styles/acidtech_tiger/theme/stylesheet.css" type="text/css" />
+<!--[if IE]>
+<link rel="stylesheet" type="text/css" href="..//styles/acidtech_tiger/theme/ie7.css" />
+<![endif]-->
+
+<script type="text/javascript">
+// <![CDATA[
+
+	var onload_functions = new Array();
+	var onunload_functions = new Array();
+	var ca_main_width = '100%';
+
+
+
+function popup(url, width, height, name)
+{
+	if (!name)
+	{
+		name = '_popup';
+	}
+
+	window.open(url.replace(/&amp;/g, '&'), name, 'height=' + height + ',resizable=yes,scrollbars=yes,width=' + width);
+	return false;
+}
+
+function jumpto()
+{
+	var page = prompt('Enter the page number you wish to go to:', '3');
+	var per_page = '40';
+	var base_url = './viewforum.php?f=61&amp;sid=5f7b0dbf04cf0bea06af20d973e65634';
+
+	if (page !== null && !isNaN(page) && page == Math.floor(page) && page > 0)
+	{
+		if (base_url.indexOf('?') == -1)
+		{
+			document.location.href = base_url + '?start=' + ((page - 1) * per_page);
+		}
+		else
+		{
+			document.location.href = base_url.replace(/&amp;/g, '&') + '&start=' + ((page - 1) * per_page);
+		}
+	}
+}
+
+/**
+* Find a member
+*/
+function find_username(url)
+{
+	popup(url, 760, 570, '_usersearch');
+	return false;
+}
+
+/**
+* Mark/unmark checklist
+* id = ID of parent container, name = name prefix, state = state [true/false]
+*/
+function marklist(id, name, state)
+{
+	var parent = document.getElementById(id);
+	if (!parent)
+	{
+		eval('parent = document.' + id);
+	}
+
+	if (!parent)
+	{
+		return;
+	}
+
+	var rb = parent.getElementsByTagName('input');
+	
+	for (var r = 0; r < rb.length; r++)
+	{
+		if (rb[r].name.substr(0, name.length) == name)
+		{
+			rb[r].checked = state;
+		}
+	}
+}
+
+
+
+	/**
+	* New function for handling multiple calls to window.onload and window.unload by pentapenguin
+	*/
+	window.onload = function()
+	{
+		for (var i = 0; i < onload_functions.length; i++)
+		{
+			eval(onload_functions[i]);
+		}
+	}
+
+	window.onunload = function()
+	{
+		for (var i = 0; i < onunload_functions.length; i++)
+		{
+			eval(onunload_functions[i]);
+		}
+	}
+
+
+if(navigator.userAgent && navigator.userAgent.indexOf('Mac OS X') > 0)
+{
+	document.write('<link rel="stylesheet" href="..//styles/acidtech_tiger/theme/mac.css" type="text/css" />');
+}
+
+// ]]>
+</script>
+<script type="text/javascript" src="..//styles/acidtech_tiger/template/ca_scripts.js"></script>
+
+
+<script type="text/javascript" src="..//mchat/jquery-1.5.0.min.js"></script>
+<script type="text/javascript" src="..//mchat/jquery_cookie_mini.js"></script>
+
+</head>
+<body class="ltr">
+
+<a name="top"></a>
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%" id="maintable" align="center">
+<tr>
+	<td id="logorow" align="center"><div id="logo-left"><div id="logo-right">
+		<a href="../index.html"><img src="..//styles/images/imageset/site_logo.gif" alt="" title="" /></a>
+	</div></div></td>
+</tr>
+<tr>
+	<td class="navrow">
+		<a href="#">Register</a> &#8226; 
+		<a href="#">FAQ</a>
+		 &#8226; <a href="#">Search</a> &#8226; <a href="#">Login</a>
+	</td>
+</tr>
+<tr>
+	<td id="contentrow">
+
+
+
+    <table width="100%" cellspacing="0">
+    <tr>
+        <td class="gensmall">
+            <a href="#">View unanswered posts</a> | <a href="#">View active topics</a>
+        </td>
+        <td class="gensmall" align="right">
+            It is currently Fri Aug 28, 2020 9:05 am<br />
+            
+        </td>
+    </tr>
+    </table>
+
+	<table class="tablebg breadcrumb" width="100%" cellspacing="0" cellpadding="0" style="margin-top: 5px;">
+	<tr>
+		<td class="row1">
+			<p class="breadcrumbs"><a href="../index.html">Board index</a> &#187; <a href="../forum_30/forum_30.html">Cortex Command</a> &#187; <a href="../forum_61/forum_61.html">Mod Releases</a></p>
+			<p class="datetime">All times are UTC [ <abbr title="Daylight Saving Time">DST</abbr> ]</p>
+		</td>
+	</tr>
+	</table>
+
+	<br />
+	    
+		<div class="cap-div"><div class="cap-left"><div class="cap-right">&nbsp;Forum&nbsp;</div></div></div>
+		<table class="tablebg" cellspacing="0" width="100%">
+		<tr>
+			<th colspan="2">&nbsp;Forum&nbsp;</th>
+			<th width="50">&nbsp;Topics&nbsp;</th>
+			<th width="50">&nbsp;Posts&nbsp;</th>
+			<th width="175">&nbsp;Last post&nbsp;</th>
+		</tr>
+	
+		<tr>
+			<td class="row1" width="31" align="center"><img src="..//styles/images/imageset/forum_read_locked.gif" width="23" height="23" alt="Forum locked" title="Forum locked" /></td>
+			<td class="row1">
+				
+				<a class="forumlink" href="../forum_83/forum_83.html">Older Mods</a>
+				<p class="forumdesc">Mods in this section are no longer compatible with the current version of Cortex Command.</p>
+				
+			</td>
+			<td class="row2" align="center"><p class="topicdetails">313</p></td>
+			<td class="row2" align="center"><p class="topicdetails">12316</p></td>
+			<td class="row2" align="center" nowrap="nowrap">
+				
+					<p class="topicdetails">Mon Oct 26, 2009 1:21 am</p>
+					<p class="topicdetails"><a href="#" style="color: #CC0000;" class="username-coloured">Dauss</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				
+			</td>
+		</tr>
+		
+		</table>
+		
+	
+	<div id="pageheader">
+	    
+	</div>
+
+	<br clear="all" />
+
+
+<div id="pagecontent">
+
+
+		<table width="100%" cellspacing="1">
+		<tr>
+			
+				<td align="left" valign="middle"><a href="#"><img src="..//styles/images/imageset/en/button_topic_new.gif" width="101" height="20" alt="Post new topic" title="Post new topic" /></a></td>
+			
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;Page <strong>3</strong> of <strong>23</strong><br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ 898 topics ]&nbsp;</td>
+				
+				<td align="right" width="100%">
+					<br /><b><a href="#" onclick="jumpto(); return false;" title="Click to jump to page…">Go to page</a> <a href="../forum_61/forum_61_40.html">Previous</a>&nbsp;&nbsp;<a href="../forum_61/forum_61.html">1</a><span class="page-sep">, </span><a href="../forum_61/forum_61_40.html">2</a><span class="page-sep">, </span><strong>3</strong><span class="page-sep">, </span><a href="../forum_61/forum_61_120.html">4</a><span class="page-sep">, </span><a href="../forum_61/forum_61_160.html">5</a><span class="page-sep">, </span><a href="../forum_61/forum_61_200.html">6</a><span class="page-dots"> ... </span><a href="../forum_61/forum_61_880.html">23</a> &nbsp;<a href="../forum_61/forum_61_120.html">Next</a></b>
+				</td>
+			
+		</tr>
+		</table>
+	
+		
+		<div class="cap-div"><div class="cap-left"><div class="cap-right">&nbsp;Mod Releases&nbsp;</div></div></div>
+		<table class="tablebg" width="100%" cellspacing="0">
+		<tr>
+			
+				<th colspan="3">&nbsp;Topics&nbsp;</th>
+			
+			<th>&nbsp;Author&nbsp;</th>
+			<th>&nbsp;Replies&nbsp;</th>
+			<th>&nbsp;Views&nbsp;</th>
+			<th>&nbsp;Last post&nbsp;</th>
+		</tr>
+
+		
+				<tr>
+					<td class="row3" colspan="7"><b class="gensmall">Announcements</b></td>
+				</tr>
+			
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/sticky_read.gif" width="16" height="16" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center">&nbsp;</td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Thu Dec 30, 2010 2:38 am" href="../forum_61/thread_20963/thread_20963.html" class="topictitle">Mod Releases Topic Icons</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_20963/thread_20963.html">1</a><span class="page-sep">, </span><a href="../forum_61/thread_20963/thread_20963_15.html">2</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#" style="color: #993333;" class="username-coloured">TheLastBanana</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">15</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">58270</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sat Nov 01, 2014 12:43 pm</p>
+					<p class="topicdetails"><a href="#">4zK</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/announce_read_locked.gif" width="18" height="18" alt="This topic is locked, you cannot edit posts or make further replies." title="This topic is locked, you cannot edit posts or make further replies." /></td>
+				
+					<td class="row1" width="25" align="center">&nbsp;</td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Thu Dec 16, 2010 2:45 am" href="../forum_61/thread_20639/thread_20639.html" class="topictitle">- Forum Rules -</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_20639/thread_20639.html">1</a><span class="page-sep">, </span><a href="../forum_61/thread_20639/thread_20639_15.html">2</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Duh102</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">15</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">856488</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Mon Apr 25, 2011 12:10 am</p>
+					<p class="topicdetails"><a href="#" style="color: #993333;" class="username-coloured">TheLastBanana</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/announce_read_locked.gif" width="14" height="14" alt="This topic is locked, you cannot edit posts or make further replies." title="This topic is locked, you cannot edit posts or make further replies." /></td>
+				
+					<td class="row1" width="25" align="center">&nbsp;</td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Sat Mar 15, 2008 9:24 pm" href="../forum_61/thread_10652/thread_10652.html" class="topictitle">How to install mods.</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Control</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">5</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">88019</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Fri Mar 21, 2008 7:45 pm</p>
+					<p class="topicdetails"><a href="#" style="color: #CC0000;" class="username-coloured">Grif</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+				<tr>
+					<td class="row3" colspan="7"><b class="gensmall">Topics</b></td>
+				</tr>
+			
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center">&nbsp;</td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Thu Sep 15, 2016 12:12 pm" href="../forum_61/thread_46089/thread_46089.html" class="topictitle">Gamma Task Force  (female faction)</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">breakwarp11</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">8</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">6666</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sat Sep 17, 2016 11:09 pm</p>
+					<p class="topicdetails"><a href="#">Contrary</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center">&nbsp;</td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Thu Aug 25, 2016 2:41 pm" href="../forum_61/thread_46081/thread_46081.html" class="topictitle">Nebula Restoration Command</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">RandomCoderZ</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">5</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">6040</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sun Sep 11, 2016 2:27 am</p>
+					<p class="topicdetails"><a href="#">RandomCoderZ</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Wed Aug 31, 2016 7:28 pm" href="../forum_61/thread_46084/thread_46084.html" class="topictitle">Lotus corporation</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Death Visor</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">9</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">10682</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sat Sep 03, 2016 1:54 am</p>
+					<p class="topicdetails"><a href="#">RandomCoderZ</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/10.png" width="22" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Mon Oct 25, 2010 6:49 am" href="../forum_61/thread_20028/thread_20028.html" class="topictitle">The Wehrmacht - an Axis mod - WWII</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_20028/thread_20028.html">1</a><span class="page-dots"> ... </span><a href="../forum_61/thread_20028/thread_20028_435.html">30</a><span class="page-sep">, </span><a href="../forum_61/thread_20028/thread_20028_450.html">31</a><span class="page-sep">, </span><a href="../forum_61/thread_20028/thread_20028_465.html">32</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Kettenkrad</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">478</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">173694</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Mon Aug 29, 2016 5:58 pm</p>
+					<p class="topicdetails"><a href="#">Kettenkrad</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Thu Aug 18, 2016 9:57 pm" href="../forum_61/thread_46078/thread_46078.html" class="topictitle">Adamant Regime Tech 1.0.1: High-Tier Ballistic Military Gear</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">SzGamer27</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">5</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">10739</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sat Aug 20, 2016 10:40 pm</p>
+					<p class="topicdetails"><a href="#">Praetors</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center">&nbsp;</td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Mon Aug 01, 2016 8:58 pm" href="../forum_61/thread_46075/thread_46075.html" class="topictitle">Heroes Mod</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Tiger</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">5</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">7637</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Wed Aug 03, 2016 8:59 am</p>
+					<p class="topicdetails"><a href="#">RandomCoderZ</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Thu Apr 16, 2015 4:23 pm" href="../forum_61/thread_45936/thread_45936.html" class="topictitle">Endless game modes</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Asmageddon</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">3</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">20253</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Wed Jul 13, 2016 8:53 pm</p>
+					<p class="topicdetails"><a href="#">Punisher</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Tue Jun 14, 2016 8:32 pm" href="../forum_61/thread_46062/thread_46062.html" class="topictitle">Grand Army of The Republic [WIP] 1.0</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Grimmcrypt</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">1</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">13442</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Thu Jul 07, 2016 4:46 pm</p>
+					<p class="topicdetails"><a href="#">Punisher</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Sun Jun 12, 2016 11:13 pm" href="../forum_61/thread_46061/thread_46061.html" class="topictitle">Coalition arms: A WIP mod.</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Lando</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">0</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">18017</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sun Jun 12, 2016 11:13 pm</p>
+					<p class="topicdetails"><a href="#">Lando</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center">&nbsp;</td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Tue May 31, 2016 10:02 pm" href="../forum_61/thread_46054/thread_46054.html" class="topictitle">A mod that works but has a major bug.</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Zebten</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">2</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">4670</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sat Jun 04, 2016 10:08 pm</p>
+					<p class="topicdetails"><a href="#">Zebten</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Tue Feb 09, 2016 5:56 pm" href="../forum_61/thread_46035/thread_46035.html" class="topictitle">PETTER GRIF MOD</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">SlimShadyLIVE</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">7</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">10623</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Fri May 27, 2016 7:45 pm</p>
+					<p class="topicdetails"><a href="#">Mackerel</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Mon Oct 26, 2015 10:24 am" href="../forum_61/thread_45997/thread_45997.html" class="topictitle">Watary Genetic</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_45997/thread_45997.html">1</a><span class="page-sep">, </span><a href="../forum_61/thread_45997/thread_45997_15.html">2</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">DedushkaBot</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">15</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">19924</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Thu Apr 21, 2016 6:40 pm</p>
+					<p class="topicdetails"><a href="#">LSWraith</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Sat Apr 16, 2016 11:47 am" href="../forum_61/thread_46048/thread_46048.html" class="topictitle">Space Terrorists!</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Punisher</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">3</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">12147</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Mon Apr 18, 2016 4:21 pm</p>
+					<p class="topicdetails"><a href="#">Punisher</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B27.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Mon Sep 26, 2011 8:12 pm" href="../forum_61/thread_25661/thread_25661.html" class="topictitle">Trappers: Canyon Town</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_25661/thread_25661.html">1</a><span class="page-dots"> ... </span><a href="../forum_61/thread_25661/thread_25661_150.html">11</a><span class="page-sep">, </span><a href="../forum_61/thread_25661/thread_25661_165.html">12</a><span class="page-sep">, </span><a href="../forum_61/thread_25661/thread_25661_180.html">13</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">akblabla</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">192</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">85761</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Thu Apr 07, 2016 9:38 pm</p>
+					<p class="topicdetails"><a href="#">fv22</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Sat Jun 23, 2012 12:39 pm" href="../forum_61/thread_31318/thread_31318.html" class="topictitle">Untitled Tech 2.5 (B31) [26th April 2015]</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_31318/thread_31318.html">1</a><span class="page-dots"> ... </span><a href="../forum_61/thread_31318/thread_31318_390.html">27</a><span class="page-sep">, </span><a href="../forum_61/thread_31318/thread_31318_405.html">28</a><span class="page-sep">, </span><a href="../forum_61/thread_31318/thread_31318_420.html">29</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">4zK</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">427</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">140326</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Tue Apr 05, 2016 5:56 pm</p>
+					<p class="topicdetails"><a href="#">4zK</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Wed Feb 24, 2016 1:31 am" href="../forum_61/thread_46039/thread_46039.html" class="topictitle">The Heavies</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Hoovytaurus</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">4</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">12610</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Tue Apr 05, 2016 1:14 pm</p>
+					<p class="topicdetails"><a href="#">Galacticruler</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Wed Feb 10, 2016 8:51 pm" href="../forum_61/thread_46036/thread_46036.html" class="topictitle">Necromunda corp</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Death Visor</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">7</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">13298</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Fri Mar 25, 2016 11:21 pm</p>
+					<p class="topicdetails"><a href="#">fv22</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/10.png" width="22" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Sun Jul 22, 2012 4:39 pm" href="../forum_61/thread_31475/thread_31475.html" class="topictitle">The UNSC, a HALO mod! v4.0</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_31475/thread_31475.html">1</a><span class="page-dots"> ... </span><a href="../forum_61/thread_31475/thread_31475_540.html">37</a><span class="page-sep">, </span><a href="../forum_61/thread_31475/thread_31475_555.html">38</a><span class="page-sep">, </span><a href="../forum_61/thread_31475/thread_31475_570.html">39</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">AndyChanglee</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">579</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">153358</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sat Jan 16, 2016 6:05 pm</p>
+					<p class="topicdetails"><a href="#">fightman</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center">&nbsp;</td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Sat May 21, 2011 9:40 am" href="../forum_61/thread_23871/thread_23871.html" class="topictitle">PixelGenerator Mods</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_23871/thread_23871.html">1</a><span class="page-sep">, </span><a href="../forum_61/thread_23871/thread_23871_15.html">2</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">PixelGenerator</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">19</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">26423</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sun Jan 10, 2016 11:47 pm</p>
+					<p class="topicdetails"><a href="#">PixelGenerator</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Sat Jan 09, 2016 4:32 am" href="../forum_61/thread_46024/thread_46024.html" class="topictitle">fix some mod</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">fightman</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">0</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">17780</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sat Jan 09, 2016 4:32 am</p>
+					<p class="topicdetails"><a href="#">fightman</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B30.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Thu May 29, 2014 10:47 am" href="../forum_61/thread_45721/thread_45721.html" class="topictitle">[Mod Contest Entry: Balanced Actor]Old Wurttemberg Irregular</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Major</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">6</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">15054</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Mon Jan 04, 2016 2:10 am</p>
+					<p class="topicdetails"><a href="#">Lemon</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Fri Jan 01, 2016 9:38 pm" href="../forum_61/thread_46022/thread_46022.html" class="topictitle">House of Vryn Stage V [01-JAN-16]</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Grimmcrypt</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">4</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">10951</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sat Jan 02, 2016 2:37 am</p>
+					<p class="topicdetails"><a href="#">Grimmcrypt</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/10.png" width="22" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Fri Jul 19, 2013 12:37 am" href="../forum_61/thread_45357/thread_45357.html" class="topictitle">Interstellar Marines [WIP]</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">numanair</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">8</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">23684</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Wed Dec 30, 2015 7:14 pm</p>
+					<p class="topicdetails"><a href="#">HuskyD</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B25.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Fri May 29, 2009 9:50 pm" href="../forum_61/thread_15059/thread_15059.html" class="topictitle">Vault-Tec 1.00 (B25) - DISCONTINUED</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_15059/thread_15059.html">1</a><span class="page-dots"> ... </span><a href="../forum_61/thread_15059/thread_15059_105.html">8</a><span class="page-sep">, </span><a href="../forum_61/thread_15059/thread_15059_120.html">9</a><span class="page-sep">, </span><a href="../forum_61/thread_15059/thread_15059_135.html">10</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Gotcha!</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">145</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">105475</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sun Dec 27, 2015 3:33 am</p>
+					<p class="topicdetails"><a href="#">johiah</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B27.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Tue May 31, 2011 3:20 pm" href="../forum_61/thread_24049/thread_24049.html" class="topictitle">OnLine Tech</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_24049/thread_24049.html">1</a><span class="page-dots"> ... </span><a href="../forum_61/thread_24049/thread_24049_45.html">4</a><span class="page-sep">, </span><a href="../forum_61/thread_24049/thread_24049_60.html">5</a><span class="page-sep">, </span><a href="../forum_61/thread_24049/thread_24049_75.html">6</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">I_am_Killer_Man</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">81</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">57895</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Mon Dec 21, 2015 1:05 am</p>
+					<p class="topicdetails"><a href="#">johiah</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B30.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Sun Jan 25, 2015 4:59 pm" href="../forum_61/thread_45899/thread_45899.html" class="topictitle">THE MATRIX 0.85</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">DudeAbides</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">6</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">15180</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sun Dec 13, 2015 4:44 am</p>
+					<p class="topicdetails"><a href="#">fightman</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B30.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Tue Aug 06, 2013 10:12 am" href="../forum_61/thread_45387/thread_45387.html" class="topictitle">Earth Coalition! Alpha 0.6</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_45387/thread_45387.html">1</a><span class="page-sep">, </span><a href="../forum_61/thread_45387/thread_45387_15.html">2</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Sfabrikans</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">28</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">50066</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Fri Dec 04, 2015 1:51 am</p>
+					<p class="topicdetails"><a href="#">Greenclone</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B30.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Mon Oct 05, 2009 10:48 pm" href="../forum_61/thread_16750/thread_16750.html" class="topictitle">Growth Pod *Update for B30</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_16750/thread_16750.html">1</a><span class="page-sep">, </span><a href="../forum_61/thread_16750/thread_16750_15.html">2</a><span class="page-sep">, </span><a href="../forum_61/thread_16750/thread_16750_30.html">3</a><span class="page-sep">, </span><a href="../forum_61/thread_16750/thread_16750_45.html">4</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#" style="color: #993333;" class="username-coloured">CaveCricket48</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">53</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">37442</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Fri Dec 04, 2015 12:36 am</p>
+					<p class="topicdetails"><a href="#">asdedo</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/10.png" width="22" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Mon Aug 15, 2011 2:26 pm" href="../forum_61/thread_25172/thread_25172.html" class="topictitle">Mehman's Experimental Weaponry[V33: Big Update]</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_25172/thread_25172.html">1</a><span class="page-dots"> ... </span><a href="../forum_61/thread_25172/thread_25172_180.html">13</a><span class="page-sep">, </span><a href="../forum_61/thread_25172/thread_25172_195.html">14</a><span class="page-sep">, </span><a href="../forum_61/thread_25172/thread_25172_210.html">15</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Mehman</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">210</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">125227</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Fri Dec 04, 2015 12:13 am</p>
+					<p class="topicdetails"><a href="#">Miggles</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center">&nbsp;</td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Fri Sep 03, 2010 12:33 am" href="../forum_61/thread_19665/thread_19665.html" class="topictitle">The APOLLOCALIPSE V4 - Is this a B25 I see?</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_19665/thread_19665.html">1</a><span class="page-dots"> ... </span><a href="../forum_61/thread_19665/thread_19665_60.html">5</a><span class="page-sep">, </span><a href="../forum_61/thread_19665/thread_19665_75.html">6</a><span class="page-sep">, </span><a href="../forum_61/thread_19665/thread_19665_90.html">7</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Areku</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">95</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">74149</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Thu Nov 26, 2015 1:40 pm</p>
+					<p class="topicdetails"><a href="#">johiah</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Mon Apr 20, 2015 4:41 pm" href="../forum_61/thread_45939/thread_45939.html" class="topictitle">Tiberian Cortex (G:R1.1g/N:R1.4f)</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_45939/thread_45939.html">1</a><span class="page-sep">, </span><a href="../forum_61/thread_45939/thread_45939_15.html">2</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">Arcalane</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">22</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">29841</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Mon Nov 23, 2015 11:38 am</p>
+					<p class="topicdetails"><a href="#">Arcalane</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center">&nbsp;</td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Sat Nov 07, 2015 3:26 pm" href="../forum_61/thread_46006/thread_46006.html" class="topictitle">Mechanism</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">The Decaying Soldat</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">1</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">6460</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Wed Nov 11, 2015 3:51 pm</p>
+					<p class="topicdetails"><a href="#">scrdest</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center">&nbsp;</td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Sat Nov 07, 2015 2:31 pm" href="../forum_61/thread_46003/thread_46003.html" class="topictitle">Press [X] to Jason</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">The Decaying Soldat</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">1</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">6413</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Mon Nov 09, 2015 5:27 am</p>
+					<p class="topicdetails"><a href="#">deeptron</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center">&nbsp;</td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Sat Nov 07, 2015 3:16 pm" href="../forum_61/thread_46005/thread_46005.html" class="topictitle">Retrofit Security</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">The Decaying Soldat</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">0</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">17774</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sat Nov 07, 2015 3:16 pm</p>
+					<p class="topicdetails"><a href="#">The Decaying Soldat</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center">&nbsp;</td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Sat Nov 07, 2015 2:38 pm" href="../forum_61/thread_46004/thread_46004.html" class="topictitle">Flappy Bird Simulator for CC</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">The Decaying Soldat</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">0</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">16570</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sat Nov 07, 2015 2:38 pm</p>
+					<p class="topicdetails"><a href="#">The Decaying Soldat</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center">&nbsp;</td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Sat Nov 07, 2015 2:24 pm" href="../forum_61/thread_46002/thread_46002.html" class="topictitle">BB-8 Mini Mod</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">The Decaying Soldat</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">0</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">17100</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sat Nov 07, 2015 2:24 pm</p>
+					<p class="topicdetails"><a href="#">The Decaying Soldat</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B27.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Thu Jan 28, 2010 4:02 pm" href="../forum_61/thread_17686/thread_17686.html" class="topictitle">They hunger/FD's Guns</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_17686/thread_17686.html">1</a><span class="page-dots"> ... </span><a href="../forum_61/thread_17686/thread_17686_165.html">12</a><span class="page-sep">, </span><a href="../forum_61/thread_17686/thread_17686_180.html">13</a><span class="page-sep">, </span><a href="../forum_61/thread_17686/thread_17686_195.html">14</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">findude</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">208</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">121504</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Thu Oct 29, 2015 12:04 pm</p>
+					<p class="topicdetails"><a href="#">johiah</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B23332.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Sun Jun 27, 2010 8:25 am" href="../forum_61/thread_19114/thread_19114.html" class="topictitle">Creeper Vines *Update - Vines will chase you, and spread mor</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_19114/thread_19114.html">1</a><span class="page-dots"> ... </span><a href="../forum_61/thread_19114/thread_19114_45.html">4</a><span class="page-sep">, </span><a href="../forum_61/thread_19114/thread_19114_60.html">5</a><span class="page-sep">, </span><a href="../forum_61/thread_19114/thread_19114_75.html">6</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#" style="color: #993333;" class="username-coloured">CaveCricket48</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">84</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">53396</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Sun Sep 13, 2015 4:28 pm</p>
+					<p class="topicdetails"><a href="#">Aquarius</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					 <a title="Posted: Sat Mar 28, 2015 6:50 pm" href="../forum_61/thread_45924/thread_45924.html" class="topictitle">Scripts of fun</a>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">weegee</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">1</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">13520</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Wed Aug 19, 2015 2:34 pm</p>
+					<p class="topicdetails"><a href="#">DemonicWeed</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+
+			<tr>
+				<td class="row1" width="25" align="center"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				
+					<td class="row1" width="25" align="center"><img src="..//images/icons/misc/B31.png" width="38" height="14" alt="" title="" /></td>
+				
+				<td class="row1">
+					
+					<img src="..//styles/images/imageset/icon_topic_attach.gif" width="6" height="12" alt="Attachment(s)" title="Attachment(s)" /> <a title="Posted: Wed Jul 02, 2014 7:57 pm" href="../forum_61/thread_45755/thread_45755.html" class="topictitle">The Humble Ronin Expansion 1.2.1 &lt;Back again! Get it today!&gt;</a>
+					
+						<p class="gensmall"> [ <img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="Go to page" title="Go to page" />Go to page: <a href="../forum_61/thread_45755/thread_45755.html">1</a><span class="page-sep">, </span><a href="../forum_61/thread_45755/thread_45755_15.html">2</a><span class="page-sep">, </span><a href="../forum_61/thread_45755/thread_45755_30.html">3</a> ] </p>
+					
+				</td>
+				<td class="row2" width="130" align="center"><p class="topicauthor"><a href="#">SzGamer27</a></p></td>
+				<td class="row1" width="50" align="center"><p class="topicdetails">35</p></td>
+				<td class="row2" width="50" align="center"><p class="topicdetails">39047</p></td>
+				<td class="row1" width="140" align="center">
+					<p class="topicdetails" style="white-space: nowrap;">Mon Aug 17, 2015 10:28 pm</p>
+					<p class="topicdetails"><a href="#">xndrgn</a>
+						<a href="#"><img src="..//styles/images/imageset/icon_topic_latest.gif" width="13" height="9" alt="View the latest post" title="View the latest post" /></a>
+					</p>
+				</td>
+			</tr>
+
+		
+		<tr align="center">
+			
+				<td class="cat" colspan="7">
+			
+					<form method="post" action="./viewforum.php?f=61&amp;start=80&amp;sid=5f7b0dbf04cf0bea06af20d973e65634"><span class="gensmall">Display topics from previous:</span>&nbsp;<select name="st" id="st"><option value="0" selected="selected">All Topics</option><option value="1">1 day</option><option value="7">7 days</option><option value="14">2 weeks</option><option value="30">1 month</option><option value="90">3 months</option><option value="180">6 months</option><option value="365">1 year</option></select>&nbsp;<span class="gensmall">Sort by</span> <select name="sk" id="sk"><option value="a">Author</option><option value="t" selected="selected">Post time</option><option value="r">Replies</option><option value="s">Subject</option><option value="v">Views</option></select> <select name="sd" id="sd"><option value="a">Ascending</option><option value="d" selected="selected">Descending</option></select>&nbsp;<input class="btnlite" type="submit" name="sort" value="Go" /></form>
+				</td>
+		</tr>
+		
+		</table>
+		
+	
+		<table width="100%" cellspacing="1">
+		<tr>
+			
+				<td align="left" valign="middle"><a href="#"><img src="..//styles/images/imageset/en/button_topic_new.gif" width="101" height="20" alt="Post new topic" title="Post new topic" /></a></td>
+			
+				<td class="nav" valign="middle" nowrap="nowrap">&nbsp;Page <strong>3</strong> of <strong>23</strong></td>
+				<td class="gensmall" nowrap="nowrap">&nbsp;[ 898 topics ]&nbsp;</td>
+				<td class="gensmall" width="100%" align="right" nowrap="nowrap"><b><a href="#" onclick="jumpto(); return false;" title="Click to jump to page…">Go to page</a> <a href="../forum_61/forum_61_40.html">Previous</a>&nbsp;&nbsp;<a href="../forum_61/forum_61.html">1</a><span class="page-sep">, </span><a href="../forum_61/forum_61_40.html">2</a><span class="page-sep">, </span><strong>3</strong><span class="page-sep">, </span><a href="../forum_61/forum_61_120.html">4</a><span class="page-sep">, </span><a href="../forum_61/forum_61_160.html">5</a><span class="page-sep">, </span><a href="../forum_61/forum_61_200.html">6</a><span class="page-dots"> ... </span><a href="../forum_61/forum_61_880.html">23</a> &nbsp;<a href="../forum_61/forum_61_120.html">Next</a></b></td>
+			
+		</tr>
+		</table>
+	
+
+	<br clear="all" />
+
+</div>
+
+<table class="tablebg breadcrumb" width="100%" cellspacing="0" cellpadding="0" style="margin-top: 5px;">
+	<tr>
+		<td class="row1">
+			<p class="breadcrumbs"><a href="../index.html">Board index</a> &#187; <a href="../forum_30/forum_30.html">Cortex Command</a> &#187; <a href="../forum_61/forum_61.html">Mod Releases</a></p>
+			<p class="datetime">All times are UTC [ <abbr title="Daylight Saving Time">DST</abbr> ]</p>
+		</td>
+	</tr>
+	</table>
+	<br clear="all" />
+
+	<table class="tablebg" width="100%" cellspacing="0">
+	<tr>
+		<td class="cat"><h4>Who is online</h4></td>
+	</tr>
+	<tr>
+		<td class="row1"><p class="gensmall">Users browsing this forum: No registered users</p></td>
+	</tr>
+	</table>
+
+	<br clear="all" />
+
+	<table width="100%" cellspacing="0">
+	<tr>
+		<td align="left" valign="top">
+			<table cellspacing="3" cellpadding="0" border="0" class="legend legend-viewforum">
+			<tr>
+				<td width="20" style="text-align: center;"></td>
+				<td class="gensmall">New posts</td>
+				<td>&nbsp;&nbsp;</td>
+				<td width="20" style="text-align: center;"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts" title="No unread posts" /></td>
+				<td class="gensmall">No new posts</td>
+				<td>&nbsp;&nbsp;</td>
+				<td width="20" style="text-align: center;"><img src="..//styles/images/imageset/sticky_read.gif" width="16" height="16" alt="Announce" title="Announce" /></td>
+				<td class="gensmall">Announcement</td>
+			</tr>
+			<tr>
+				<td style="text-align: center;"></td>
+				<td class="gensmall">New posts [ Popular ]</td>
+				<td>&nbsp;&nbsp;</td>
+				<td style="text-align: center;"><img src="..//styles/images/imageset/topic_read.gif" width="18" height="18" alt="No unread posts [ Popular ]" title="No unread posts [ Popular ]" /></td>
+				<td class="gensmall">No new posts [ Popular ]</td>
+				<td>&nbsp;&nbsp;</td>
+				<td style="text-align: center;"><img src="..//styles/images/imageset/sticky_read.gif" width="16" height="16" alt="Sticky" title="Sticky" /></td>
+				<td class="gensmall">Sticky</td>			
+			</tr>
+			<tr>
+				<td style="text-align: center;"></td>
+				<td class="gensmall">New posts [ Locked ]</td>
+				<td>&nbsp;&nbsp;</td>
+				<td style="text-align: center;"><img src="..//styles/images/imageset/topic_read_locked.gif" width="14" height="14" alt="No unread posts [ Locked ]" title="No unread posts [ Locked ]" /></td>
+				<td class="gensmall">No new posts [ Locked ]</td>
+				<td>&nbsp;&nbsp;</td>
+				<td style="text-align: center;"><img src="..//styles/images/imageset/topic_moved.gif" width="18" height="18" alt="Moved topic" title="Moved topic" /></td>
+				<td class="gensmall">Moved topic</td>
+			</tr>
+			</table>
+		</td>
+		<td align="right"><span class="gensmall">You <strong>cannot</strong> post new topics in this forum<br />You <strong>cannot</strong> reply to topics in this forum<br />You <strong>cannot</strong> edit your posts in this forum<br />You <strong>cannot</strong> delete your posts in this forum<br />You <strong>cannot</strong> post attachments in this forum<br /></span></td>
+	</tr>
+	</table>
+
+
+<br clear="all" />
+
+<table width="100%" cellspacing="0">
+<tr>
+	<td><form method="post" name="search" action="./search.php?sid=5f7b0dbf04cf0bea06af20d973e65634"><span class="gensmall">Search for:</span> <input class="post" type="text" name="keywords" size="20" /> <input class="btnlite" type="submit" value="Go" /></form></td>
+	<td align="right">
+	<form method="post" name="jumpbox" action="./viewforum.php?sid=5f7b0dbf04cf0bea06af20d973e65634" onsubmit="if(document.jumpbox.f.value == -1){return false;}">
+
+	<table cellspacing="0" cellpadding="0" border="0">
+	<tr>
+		<td nowrap="nowrap"><span class="gensmall">Jump to:</span>&nbsp;<select name="f" onchange="if(this.options[this.selectedIndex].value != -1){ document.forms['jumpbox'].submit() }">
+
+		
+			<option value="-1">Select a forum</option>
+		<option value="-1">------------------</option>
+			<option value="30">Cortex Command</option>
+		
+			<option value="35">&nbsp; &nbsp;Dev Log</option>
+		
+			<option value="109">&nbsp; &nbsp;Wiki</option>
+		
+			<option value="4">&nbsp; &nbsp;Game Discussion</option>
+		
+			<option value="72">&nbsp; &nbsp;Game and Licensing Support</option>
+		
+			<option value="1">&nbsp; &nbsp;Mod Making</option>
+		
+			<option value="73">&nbsp; &nbsp;&nbsp; &nbsp;Lua Scripting</option>
+		
+			<option value="75">&nbsp; &nbsp;&nbsp; &nbsp;Requests</option>
+		
+			<option value="61" selected="selected">&nbsp; &nbsp;Mod Releases</option>
+		
+			<option value="83">&nbsp; &nbsp;&nbsp; &nbsp;Older Mods</option>
+		
+			<option value="24">&nbsp; &nbsp;Scene Releases</option>
+		
+			<option value="8">&nbsp; &nbsp;&nbsp; &nbsp;Scene Making</option>
+		
+			<option value="113">Planetoid Pioneers</option>
+		
+			<option value="114">&nbsp; &nbsp;Game Discussion</option>
+		
+			<option value="115">&nbsp; &nbsp;Pioneer Program Lounge</option>
+		
+			<option value="32">Data Realms Off-Topic</option>
+		
+			<option value="7">&nbsp; &nbsp;Off Topic Chat</option>
+		
+			<option value="82">&nbsp; &nbsp;&nbsp; &nbsp;Gaming</option>
+		
+			<option value="87">&nbsp; &nbsp;&nbsp; &nbsp;Forum Games</option>
+		
+			<option value="48">&nbsp; &nbsp;Site Support &amp; Feedback</option>
+		
+
+		</select>&nbsp;<input class="btnlite" type="submit" value="Go" /></td>
+	</tr>
+	</table>
+
+	</form>
+</td>
+</tr>
+</table>
+
+<img src="" width="1" height="1" alt="cron" />
+
+<div id="wrapfooter">
+	
+	<span class="copyright">
+	Powered by <a href="http://www.phpbb.com/">phpBB</a> &copy; 2000, 2002, 2005, 2007 phpBB Group.
+	<br /> Designed by <a href="http://stsoftware.biz">STSoftware</a> for <a href="http://ptf.com">PTF</a>.
+	<br /><bdo dir="ltr">[ Time : 0.014s | 9 Queries | GZIP : Off ]</bdo></span>
+</div>
+
+	</td>
+</tr>
+</table>
+
+</body>
+</html>
